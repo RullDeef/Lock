@@ -1,21 +1,29 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Core;
 
 public class GameManager : MonoBehaviour
 {
     public new Camera camera;
     private Plane plane;
 
+    public Lock targetLock;
+    public Transform lockHolder;
+
+    private LockConstructor lockConstructor;
     private LockMover lockMover;
 
-    public Vector3 lastMousePosition;
+    private Vector3 lastMousePosition;
 
     private void Start()
     {
         plane = new Plane(Vector3.up, 0);
 
+        lockConstructor = GetComponent<LockConstructor>();
         lockMover = GetComponent<LockMover>();
+
+        GenerateLock(1);
     }
 
     private void Update()
@@ -36,6 +44,12 @@ public class GameManager : MonoBehaviour
         }
 
         lastMousePosition = RaycastMousePosition(Input.mousePosition);
+    }
+
+    private void GenerateLock(int level)
+    {
+        targetLock = new Lock(level);
+        lockConstructor.ConstructLock(targetLock, lockHolder);
     }
 
     private Vector3 RaycastMousePosition(Vector3 position)
